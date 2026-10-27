@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Streets of Rage 2 - Kubo Touch</title>
+    <title>Streets of Rage - Kubo Touch</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #121212; color: #fff; font-family: Arial, sans-serif; }
         header { text-align: center; padding: 15px; background: #1e1e1e; }
         .badge { background: #e74c3c; color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
         #game-card { max-width: 500px; margin: 20px auto; background: #1e1e1e; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-       .cover-container { width: 100%; height: 250px; background-image: url("Streets of Rage 2 (USA)-image.jpg"); background-size: cover; background-position: center; }
+        .cover-container { 
+            width: 100%; 
+            height: 250px; 
+            background-image: url('sor-cover.jpg'); 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+            background-color: #121212; 
+        }
+        .content { padding: 20px; }
         h1 { margin: 0 0 10px 0; font-size: 24px; color: #e74c3c; }
         .meta-info { display: flex; gap: 10px; margin-bottom: 15px; font-size: 13px; color: #aaa; }
         .description { font-size: 14px; line-height: 1.5; color: #ddd; margin-bottom: 15px; }
@@ -30,16 +39,16 @@
     <div id="game-card">
         <div class="cover-container"></div>
         <div class="content">
-            <h1>Streets of Rage 2</h1>
+            <h1>Streets of Rage</h1>
             
             <div class="meta-info">
                 <span>🎮 1-2 Jogadores</span>
-                <span>📅 1992</span>
+                <span>📅 1991</span>
                 <span>🕹️ SEGA</span>
             </div>
 
             <p class="description">
-                Considerado um dos melhores jogos de todos os tempos! O sindicato está de volta e raptou o Adam. Junte-se a Axel, Blaze, Max e Skate para salvar a cidade.
+                Uma sindicata criminosa tomou conta da cidade. Lute ao lado dos ex-policiais Axel, Blaze e Adam para restaurar a paz nas ruas!
             </p>
 
             <div class="details">
@@ -48,7 +57,7 @@
                 </ul>
             </div>
 
-            <button class="btn-play" onclick="startEmulator()">JOGAR AGORA</button>
+            <button class="btn-play" onclick="startGame()">JOGAR AGORA</button>
         </div>
     </div>
 
@@ -57,27 +66,33 @@
     </div>
 
     <script type="text/javascript">
-        function startEmulator() {
-            // Esconde o card e mostra o contentor do jogo ocupando a tela toda
-            document.getElementById('game-card').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
+        function startGame() {
+            const container = document.getElementById("game-container");
+            
+            document.getElementById("game-card").style.display = "none";
+            container.style.display = "block";
+            container.innerHTML = '<div id="game" style="width:100%; height:100%;"></div>';
 
-            // Configurações do EmulatorJS para SEGA Mega Drive
-            window.EJS_player = '#game';
-            window.EJS_core = 'segaMD';
-            window.EJS_gameName = 'Streets of Rage 2';
-            window.EJS_color = '#e74c3c';
+            window.EJS_player = "#game";
+            window.EJS_core = "segaMD";
+            window.EJS_gameUrl = "sor1.bin";
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            window.EJS_gameName = "Streets of Rage";
+            window.EJS_language = "pt-BR";
             window.EJS_startOnLoaded = true;
-            window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-            window.EJS_gameUrl = 'sor2.bin'; // Altere para o nome exato da ROM no seu GitHub
 
-            // Injeta o loader do EmulatorJS com tratamento de erro
-            var script = document.createElement('script');
-            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            const oldLoader = document.getElementById("emulatorjs-loader");
+            if (oldLoader) oldLoader.remove();
+
+            const script = document.createElement("script");
+            script.id = "emulatorjs-loader";
+            script.src = window.EJS_pathtodata + "loader.js";
             script.async = true;
+            
             script.onerror = function() {
-                alert('Erro ao carregar o motor do emulador. Verifique a sua ligação.');
+                alert("Erro ao carregar o EmulatorJS. Verifique a conexão.");
             };
+            
             document.body.appendChild(script);
         }
     </script>
